@@ -1,13 +1,12 @@
 from picamera2 import Picamera2
 
 import cv2
-import numpy as np
-
-import base64
 import os
 import ssl
 import time
 from datetime import datetime
+from src import audio_functions as audio
+from src import screenshot_functions as screenshot
 
 import subprocess
 
@@ -20,48 +19,6 @@ MODEL="gpt-4o"
 audio_filename = "audiodescription.mp3"
 
 #time.sleep(5)
-
-def play_mp3(file_path):
-    try:
-        subprocess.run(['mpg123', file_path])
-    except FileNotFoundError:
-        print("mpg123 command not found. Make sure you're on macOS and afplay is installed.")
-
-def text_to_speech(text, filename):
-    response = client.audio.speech.create(
-        model="tts-1",
-        voice="alloy",
-        input=text
-    )
-
-    response.stream_to_file(filename)
-
-def convert_cv2_to_base64(cv2_image):
-    """
-    Convert an OpenCV image to a base64 encoded string.
-    
-    :param cv2_image: OpenCV Image (numpy array)
-    :return: Base64 encoded string of the image
-    """
-    # Encode the image to a buffer
-    _, buffer = cv2.imencode('.png', cv2_image)
-    
-    # Convert the buffer to a base64 string
-    base64_string = base64.b64encode(buffer).decode('utf-8')
-    
-    return base64_string
-
-def is_image_dark(image, threshold=50):
-    # Convert the image to grayscale
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
-    # Calculate the mean brightness
-    mean_brightness = np.mean(gray_image)
-    
-    # Determine if the image is dark
-    is_dark = mean_brightness < threshold
-    
-    return is_dark
 
 picam2 = Picamera2()
 config = picam2.create_still_configuration(main={"size": (800, 600)})
@@ -86,8 +43,8 @@ while True:
     cropped_image = cv2.imread("input.jpg")
     cv2.imwrite(filenamej, cropped_image)
 
-    if is_image_dark(cropped_image):
-        play_mp3("capturando.mp3")    	
+    if screenshot.is_image_dark(cropped_image):
+        audio.play_mp3("sounds/capturando.mp3")    	
         captureTrigger = True
         continue
 
@@ -98,7 +55,7 @@ while True:
         captureTrigger = False	 
 
     # Convert the OpenCV image to a base64 encoded string
-    base64_string = convert_cv2_to_base64(cropped_image)
+    base64_string = screenshot.convert_cv2_to_base64(cropped_image)
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -123,9 +80,9 @@ while True:
     with open(filenamet, 'w') as file:
         file.write(text)
 
-    text_to_speech(text, filenamem)
+    audio.text_to_speech(text, filenamem)
 
-    play_mp3(filenamem)
+    audio.play_mp3(filenamem)
 
 picam2.stop()
 
