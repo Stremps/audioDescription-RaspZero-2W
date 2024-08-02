@@ -12,7 +12,10 @@ import subprocess
 
 from openai import OpenAI
 
-client = OpenAI(api_key="API_KEY")
+with open("Api_key.txt", 'r') as file:
+    api_key_file = file.read()
+
+client = OpenAI(api_key=api_key_file)
 
 MODEL="gpt-4o"
 
