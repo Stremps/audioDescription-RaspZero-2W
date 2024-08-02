@@ -13,7 +13,7 @@ import subprocess
 from openai import OpenAI
 
 with open("Api_key.txt", 'r') as file:
-    api_key_file = file.read()
+    api_key_file = file.read().strip()
 
 client = OpenAI(api_key=api_key_file)
 
@@ -83,7 +83,7 @@ while True:
     with open(filenamet, 'w') as file:
         file.write(text)
 
-    audio.text_to_speech(text, filenamem)
+    audio.text_to_speech(text, filenamem, client)
 
     audio.play_mp3(filenamem)
 
