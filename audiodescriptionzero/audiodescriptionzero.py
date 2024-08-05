@@ -31,6 +31,9 @@ picam2.start()
 
 captureTrigger = False
 
+# Before starting to apply the loop, warn the beginning of the code
+audio.boot_start()
+
 while True:
 
     # Generate a timestamp

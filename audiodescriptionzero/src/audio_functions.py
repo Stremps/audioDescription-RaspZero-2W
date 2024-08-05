@@ -13,7 +13,7 @@ def play_mp3(file_path):
     try:
         subprocess.run(['mpg123', file_path])
     except FileNotFoundError:
-        print("mpg123 command not found. Make sure you're on macOS and afplay is installed.")
+        print("mpg123 command not found.")
 
 
 def text_to_speech(text, file_path, client):
@@ -33,3 +33,19 @@ def text_to_speech(text, file_path, client):
     )
 
     response.stream_to_file(file_path)
+
+
+def boot_start():
+    """
+    Play an MP3 file in Raspberry Zero 2 W when the code start
+    
+    :parameter(s): None
+    
+    :return: None
+    """
+    
+    try:
+        subprocess.run(['mpg123', "sounds/Boot_Sound.mp3"])
+    except FileNotFoundError:
+        print("mpg123 command not found.")
+        
