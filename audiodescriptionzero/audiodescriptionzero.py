@@ -40,9 +40,9 @@ while True:
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
     # Create filenames with the timestamp
-    filenamej = f"data/{timestamp}.jpg"
-    filenamet = f"data/{timestamp}.txt"
-    filenamem = f"data/{timestamp}.mp3"
+    filenamej = f"data/base/{timestamp}.jpg"
+    filenamet = f"data/base/{timestamp}.txt"
+    filenamem = f"data/base/{timestamp}.mp3"
 
     picam2.capture_file("input.jpg")
     
